@@ -6,7 +6,7 @@ require_once __DIR__ . "/templater.php";
 // Connect to the database.
 $db = new DB();
 // Create a new instance of the Templater class and pass the path to the templates folder.
-$templater = new Templater(__DIR__ . "/templates");
+$templater = new Templater(__DIR__ . "/templates/");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -32,16 +32,16 @@ $templater = new Templater(__DIR__ . "/templates");
     </div>
     <div class="pure-g">
       <?php
-      // Query to get all item types
+      // Query to get all item types from itemtypes and items tables
       $itemTypesQuery = "SELECT itemtypes.id AS tid, itemtypes.name, items.description
       FROM itemtypes
       LEFT JOIN items ON items.type = itemtypes.id
       ORDER BY itemtypes.name ASC";
-      // Run the query and store the results in $items
+      // Run the query and store the results as array in $items
       $result = $db->runQuery($itemTypesQuery);
       $items = $result->fetch_all(MYSQLI_ASSOC);
-      // Render the template and pass the $items array to it
-      echo $templater->render("add-loan-type.tpl.php", ['items' => $items]);
+      // Render the template and pass the $items array 
+      $templater->render("add-loan-type.tpl.php", ['items' => $items]);
       ?>
     </div>
     <div class="pure-g">
@@ -60,7 +60,7 @@ $templater = new Templater(__DIR__ . "/templates");
       $usersResult = $db->runQuery($usersQuery);
       $users = $usersResult->fetch_all(MYSQLI_ASSOC);
       // Render the template and pass the $loanItems and $users arrays to it
-      echo $templater->render("register-loan.tpl.php", ['items' => $loanItems, 'users' => $users]);
+      $templater->render("register-loan.tpl.php", ['items' => $loanItems, 'users' => $users]);
       ?>
     </div>
     <div class="pure-g">
@@ -76,7 +76,7 @@ $templater = new Templater(__DIR__ . "/templates");
       $listLoansResult = $db->runQuery($loansQuery);
       $listLoans = $listLoansResult->fetch_all(MYSQLI_ASSOC);
       // Render the template and pass the $listLoans array to it
-      echo $templater->render("list-loans.tpl.php", ['loans' => $listLoans]);
+      $templater->render("list-loans.tpl.php", ['loans' => $listLoans]);
       ?>
     </div>
   </div>

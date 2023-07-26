@@ -13,20 +13,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   // Check if there is already an active loan for the item
   $query = "SELECT active FROM loan WHERE item = ? AND (active = 0 OR active = '')";
+  // Prepare statement to check if its an integer
   $stmt = $db->prepare($query);
   $stmt->bind_param('i', $item);
 
+  // execute prepared statement 
   if ($stmt->execute()) {
     $stmt->store_result();
     if ($stmt->num_rows === 0) {
       // No active loan found, proceed to insert the new loan
       $query = "INSERT INTO loan(item, user, returndate) VALUES (?, ?, ?)";
+      // Prepare statement for query 
       $stmt = $db->prepare($query);
+      // Bind item as int, user as int and return as string
       $stmt->bind_param('iis', $item, $user, $return);
-
+      // execute the statement and show the information
       if ($stmt->execute()) {
         echo "Loan for item with id " . $item . " registered.";
       } else {
+        // in case of error return the error property
         echo "<h4>Error</h4>";
         echo "<pre>" . $stmt->error . "</pre>";
       }
